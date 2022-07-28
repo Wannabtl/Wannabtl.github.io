@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>HDU2022夏训#4 | Hexo</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <meta name="description" content="复盘1001 A Link with Bracket Sequence II 定义合法串：A初始为空串，通过左右叠加x，-x扩展；A，B可组成合法串AB；给定一个含未知项0的串，问有多少种构成合法串的方法   一眼鉴定为DP，构造 $Dp_{i,j}$ 表示 $i-&gt;j$ 的合法串总数 ， 通过枚举串长来推进。出了两次锅，第一次以为自己读错题意了，因为样例手算过不了，于是YY了一些新条件；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HDU2022夏训#4">
+<meta property="og:url" content="http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="复盘1001 A Link with Bracket Sequence II 定义合法串：A初始为空串，通过左右叠加x，-x扩展；A，B可组成合法串AB；给定一个含未知项0的串，问有多少种构成合法串的方法   一眼鉴定为DP，构造 $Dp_{i,j}$ 表示 $i-&gt;j$ 的合法串总数 ， 通过枚举串长来推进。出了两次锅，第一次以为自己读错题意了，因为样例手算过不了，于是YY了一些新条件；">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-28T14:23:44.000Z">
+<meta property="article:modified_time" content="2022-07-28T16:36:20.472Z">
+<meta property="article:author" content="Wannabtl">
+<meta property="article:tag" content="ACM">
+<meta property="article:tag" content="HDU">
+<meta property="article:tag" content="复盘">
+<meta name="twitter:card" content="summary">
+
+  <meta name="keywords" content=",ACM,HDU,复盘">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Hexo">
+  <meta name="msapplication-starturl" content="http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Hexo">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <link rel="canonical" href="http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/">
+  
+
+  
+  
+
+  
+  
+  
+
+  
+<link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/custom.css">
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(!a){document.getElementsByTagName("body")[0].className+=" mdui-drawer-body-left"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">Hexo</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="请输入关键字"><input type="hidden" name="sitesearch" value="http://example.com"></form>
+    <div class="search-result"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <script>var a=localStorage.getItem("mdui-drawer-close");if(a){document.getElementById("sidebar").className+=" mdui-drawer-close"};</script>
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">Wannabtl</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i></div>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-0");if(a){document.getElementsByClassName("mdui-collapse-item")[0].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">archive</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2022/07/">七月 2022<span class="mdui-ripple sidebar_archives-count">4</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-1");if(a){document.getElementsByClassName("mdui-collapse-item")[1].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">class</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">解题报告<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/%E5%A4%8D%E7%9B%98/">复盘<span class="mdui-ripple sidebar_archives-count">2</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-2");if(a){document.getElementsByClassName("mdui-collapse-item")[2].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/ACM/" rel="tag">ACM<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/HDU/" rel="tag">HDU<span class="mdui-ripple sidebar_archives-count">2</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/%E5%A4%8D%E7%9B%98/" rel="tag">复盘<span class="mdui-ripple sidebar_archives-count">2</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    
+      <a href="/timeline" class="mdui-list-item mdui-ripple">时间轴</a>
+    
+      <a href="/tagcloud" class="mdui-list-item mdui-ripple">标签云</a>
+    
+      <a href="/gallery" class="mdui-list-item mdui-ripple">相册</a>
+    
+    <div class="mdui-collapse-item">
+      <script>var a=localStorage.getItem("mdui-collapse-item-3");if(a){document.getElementsByClassName("mdui-collapse-item")[3].className+=" mdui-collapse-item-open"};</script>
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" class="mdui-list-item mdui-p-l-2 mdui-text-color-theme mdui-ripple" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  
+<link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <style>#main article .mdui-card-content .text-center{text-align:center!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-2.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">HDU2022夏训#4</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2022-07-28 / <i class="iconfont">&#xe601;</i> Wannabtl</div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="//qr.liantu.com/api.php?w=246&m=10&text=http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="https://service.weibo.com/share/share.php?appkey=&title=HDU2022夏训#4&url=http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/&pic=http://example.com/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=HDU2022夏训#4&url=http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/&via=Wannabtl" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/&title=HDU2022夏训#4" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://connect.qq.com/widget/shareqq/index.html?site=Hexo&title=HDU2022夏训#4&pics=http://example.com/images/favicon.png&url=http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/&text=HDU2022夏训#4" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <h1 id="复盘"><a href="#复盘" class="headerlink" title="复盘"></a>复盘</h1><h2 id="1001-A-Link-with-Bracket-Sequence-II"><a href="#1001-A-Link-with-Bracket-Sequence-II" class="headerlink" title="1001 A Link with Bracket Sequence II"></a>1001 A Link with Bracket Sequence II</h2><blockquote>
+<p>定义合法串：A初始为空串，通过左右叠加x，-x扩展；A，B可组成合法串AB；给定一个含未知项0的串，问有多少种构成合法串的方法</p>
+</blockquote>
+<ul>
+<li>一眼鉴定为DP，构造 $Dp_{i,j}$ 表示 $i-&gt;j$ 的合法串总数 ， 通过枚举串长来推进。出了两次锅，第一次以为自己读错题意了，因为样例手算过不了，于是YY了一些新条件；</li>
+<li>结果发现是有一部分情况被多次考虑了——更新的时候没有固定段首段尾，子段会作为子子段叠加到贡献上；</li>
+<li>新增一个$Dp0_{i,j}$固定为i为首，j为尾的方案数，分两部分更新即可</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*** </span></span><br><span class="line"><span class="comment"> * @Author: Wannabtl</span></span><br><span class="line"><span class="comment"> * @Date: 2022-07-28 12:13:19</span></span><br><span class="line"><span class="comment"> * @LastEditTime: 2022-07-28 13:39:00</span></span><br><span class="line"><span class="comment"> * @FilePath: \Code\Oier\HDU\2022SuperContest\#4\1001.cpp</span></span><br><span class="line"><span class="comment"> * @Description: </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> nn=<span class="number">502</span>;</span><br><span class="line"><span class="type">const</span> ll mod=<span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line"><span class="type">int</span> T,N,M;</span><br><span class="line"><span class="type">int</span> A[nn];</span><br><span class="line">ll Dp[nn][nn],Dp0[nn][nn];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Add</span><span class="params">(ll &amp;x,ll y)</span></span>&#123;</span><br><span class="line">    x=(x+y)%mod;</span><br><span class="line">    <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Solve</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>,&amp;N,&amp;M);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=N;i++)&#123;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,&amp;A[i]);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">1</span>;j&lt;=i;j++)&#123;</span><br><span class="line">            Dp[i][j]=<span class="number">0</span>;</span><br><span class="line">            Dp0[i][j]=<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=N;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(A[i]!=-A[i<span class="number">-1</span>]&amp;&amp;A[i]!=<span class="number">0</span>&amp;&amp;A[i<span class="number">-1</span>]!=<span class="number">0</span>)&#123; <span class="keyword">continue</span> ;&#125;</span><br><span class="line">        <span class="keyword">if</span>(A[i]!=<span class="number">0</span>||A[i<span class="number">-1</span>]!=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(A[i<span class="number">-1</span>]&gt;<span class="number">0</span>||A[i]&lt;<span class="number">0</span>)&#123;</span><br><span class="line">                Dp[i][i<span class="number">-1</span>]=<span class="number">1</span>;</span><br><span class="line">                Dp0[i][i<span class="number">-1</span>]=<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            Dp[i][i<span class="number">-1</span>]=Dp0[i][i<span class="number">-1</span>]=<span class="number">1ll</span>*M%mod;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> len=<span class="number">4</span>;len&lt;=N;len+=<span class="number">2</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j,i=len;i&lt;=N;i++)&#123;</span><br><span class="line">            j=i-len+<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(A[j]==-A[i]||A[j]==<span class="number">0</span>||A[i]==<span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(A[j]!=<span class="number">0</span>||A[i]!=<span class="number">0</span>)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(A[j]&gt;<span class="number">0</span>||A[i]&lt;<span class="number">0</span>)&#123;</span><br><span class="line">                        <span class="built_in">Add</span>(Dp0[i][j],Dp[i<span class="number">-1</span>][j+<span class="number">1</span>]);</span><br><span class="line">                        <span class="built_in">Add</span>(Dp[i][j],Dp0[i][j]);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="built_in">Add</span>(Dp0[i][j],Dp[i<span class="number">-1</span>][j+<span class="number">1</span>]*M%mod);</span><br><span class="line">                    <span class="built_in">Add</span>(Dp[i][j],Dp0[i][j]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> k=j+<span class="number">1</span>;k&lt;i;k+=<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="built_in">Add</span>(Dp[i][j],Dp[i][k+<span class="number">1</span>]*Dp0[k][j]%mod);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%lld\n&quot;</span>,Dp[N][<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,&amp;T);</span><br><span class="line">    <span class="keyword">while</span>(T--)&#123;</span><br><span class="line">        <span class="built_in">Solve</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;	</span><br></pre></td></tr></table></figure>
+
+<h2 id="1011-Link-is-as-bear"><a href="#1011-Link-is-as-bear" class="headerlink" title="1011 Link is as bear"></a>1011 Link is as bear</h2><blockquote>
+<p>给定数列 ${a_n}$ ，每次操作可以选定$(l,r)$将$a_l~a_r$的值改为$\bigoti mes_{l}^{r}a_i$ ， 求最终将数列统一化的最大值</p>
+</blockquote>
+<ul>
+<li><p>第一感觉是线性基最大值</p>
+</li>
+<li><p>发现很难证明，于是开始了一系列天马行空：按位排列，对零考虑，DP …</p>
+</li>
+<li><p>突然想到零能传递数，似乎能满足线性基对最大数的构造</p>
+</li>
+<li><p>逆向思考，线性基确定k个数组成最大答案，考虑剩下n-k个数构成空位让k个数移动，然后将n-k位归零即可</p>
+</li>
+<li><p>一个特殊情况是只有3个数，但是题目保证了至少有两个相同数，稍微手算一下即可发现也符合推论</p>
+</li>
+<li><p>浪费太多时间在YY上，其实一开始坚持线性基就可做了，一直在想两个相同数有什么用，下次应该先试试样例，然后再尝试证明一下，大胆猜测，小心求证</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*** </span></span><br><span class="line"><span class="comment"> * @Author: Wannabtl</span></span><br><span class="line"><span class="comment"> * @Date: 2022-07-28 14:41:05</span></span><br><span class="line"><span class="comment"> * @LastEditTime: 2022-07-28 14:46:54</span></span><br><span class="line"><span class="comment"> * @FilePath: \Code\Oier\HDU\2022SuperContest\#4\1011.cpp</span></span><br><span class="line"><span class="comment"> * @Description: </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> nn=<span class="number">1e5</span>+<span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> mn=<span class="number">55</span>;</span><br><span class="line"><span class="type">int</span> T,N;</span><br><span class="line">ll A[nn],P[mn];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Ins</span><span class="params">(ll x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">50</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">        <span class="keyword">if</span>(x&amp;(<span class="number">1ll</span>&lt;&lt;i))&#123;</span><br><span class="line">            <span class="keyword">if</span>(P[i]) x^=P[i];</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                P[i]=x;</span><br><span class="line">                <span class="keyword">return</span> ;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">ios::<span class="built_in">sync_with_stdio</span>(<span class="number">0</span>);</span><br><span class="line">    cin&gt;&gt;T;</span><br><span class="line">    <span class="keyword">while</span>(T--)&#123;</span><br><span class="line">        cin&gt;&gt;N;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=N;i++)&#123;</span><br><span class="line">            cin&gt;&gt;A[i];</span><br><span class="line">            <span class="built_in">Ins</span>(A[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        ll ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">50</span>;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">        <span class="keyword">if</span>(P[i])&#123;</span><br><span class="line">            ans=<span class="built_in">max</span>(ans,ans^P[i]);</span><br><span class="line">            P[i]=<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout&lt;&lt;ans&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+      <blockquote>
+        
+        <strong>本文链接：</strong><br><a href="http://example.com/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-4/">http://example.com/2022/07/28/HDU2022夏训-4/</a>
+      </blockquote>
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">解题报告</a><a class="mdui-ripple article_categories-link" href="/categories/%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/%E5%A4%8D%E7%9B%98/">复盘</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/ACM/" rel="tag">ACM</a><a class="mdui-ripple article_tags-link" href="/tags/HDU/" rel="tag">HDU</a><a class="mdui-ripple article_tags-link" href="/tags/%E5%A4%8D%E7%9B%98/" rel="tag">复盘</a>
+      
+    </footer>
+    
+  </article>
+  
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2022/07/28/HDU2022%E5%A4%8F%E8%AE%AD-3/">
+        <span class="mdui-p-x-3" mdui-tooltip="{content: 'HDU2022夏训'}">下一篇</span>
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2022 Wannabtl<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    
+  </div>
+</footer>
+
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  
+  
+<script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+
+  
+<script src="/custom.js"></script>
+
+</body>
+</html>
